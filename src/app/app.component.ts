@@ -21,7 +21,7 @@ export class AppComponent implements OnInit{
         resolve('Promise Resolved')
       },3000)
     })
-
+//for asysn and await
 async function getData(){
   let proValue = await promise;
   console.log(proValue)
