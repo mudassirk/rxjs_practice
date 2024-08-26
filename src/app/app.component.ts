@@ -1,7 +1,27 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Injectable,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { response } from 'express';
-import { fromEvent, interval, of, Subscription, timer } from 'rxjs';
+import {
+  from,
+  fromEvent,
+  interval,
+  map,
+  of,
+  retry,
+  retryWhen,
+  Subscription,
+  take,
+  timer,
+  toArray,
+} from 'rxjs';
 import internal from 'stream';
 
 @Component({
@@ -9,32 +29,29 @@ import internal from 'stream';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit, AfterViewInit{
+@Injectable({providedIn: 'root'})
+
+export class AppComponent implements OnInit, AfterViewInit {
   title: any;
-subscriptions : Subscription | undefined;
-   @ViewChild('addBtn') addBtn!:ElementRef;
-  result:any ='';
-  ngOnInit(): void {  
-  //   const timers = timer(5000, 2000);
-  //  this.subscriptions =  timers.subscribe(re =>{
-  //     console.log(re)
+  subscriptions: Subscription | undefined;
+  @ViewChild('addBtn') addBtn!: ElementRef;
+  result: any = '';
+  sourceObs!: Subscription;
 
-  //     if(re > 5){
-  //       this.subscriptions?.unsubscribe()
-  //     }
-  //   })
+  constructor(private http : HttpClient){}
 
-    const offStream =  of('Angular', 'Javascript', 'mongoDB');
+  ngOnInit(): void {
 
-    offStream.subscribe(res =>{
-           console.log(res)
+    this.http.get('https://jsonplaceholder.typicode.com/posts').pipe(
+  // retry(3)
+    )
+    .subscribe((res:any) =>{
+      console.log(res)
     })
 
   }
 
-  ngAfterViewInit(): void {
-    
-  }
+  ngAfterViewInit(): void {}
 }
